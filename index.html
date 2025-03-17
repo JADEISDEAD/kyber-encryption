@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kyber Post-Quantum Encryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: lightblue;
+            padding: 20px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #FFB6C1;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #FFB6C1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kyber Post-Quantum Encryption & Decryption</h1>
+    <textarea id="message" placeholder="Enter your message"></textarea><br>
+    <button onclick="encryptMessage()">Encrypt</button>
+    <button onclick="decryptMessage()">Decrypt</button>
+    <h3>Result:</h3>
+    <textarea id="result" readonly></textarea>
+    
+    <script>
+        async function encryptMessage() {
+            let message = document.getElementById("message").value;
+
+            let response = await fetch('/api/encrypt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            let result = await response.json();
+            document.getElementById("result").value = result.ciphertext;
+        }
+
+        async function decryptMessage() {
+            let ciphertext = document.getElementById("message").value;
+
+            let response = await fetch('/api/decrypt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ciphertext: ciphertext, secretKey: "secret-key" }) // Use your secret key here
+            });
+
+            let result = await response.json();
+            document.getElementById("result").value = result.message;
+        }
+    </script>
+</body>
+</html>
